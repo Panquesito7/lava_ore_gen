@@ -64,31 +64,6 @@ if count > 0 then
 	ore_nodes = nil
 	count = nil
 	
-	local clonenodeForWater = {}
-	for k,v in pairs(minetest.registered_nodes["default:stone"]) do clonenodeForWater[k] = v end
-	clonenodeForWater.groups = {cracky = 3, stone = 1, not_in_creative_inventory = 1}
-	clonenodeForWater.on_timer = function(pos)
-		local i = minetest.find_node_near(pos, 1, {"group:lava"})
-		if i then
-			minetest.after(0, 
-			function(pos)
-				minetest.set_node(pos, {name="lava_ore_gen:stone_hot"})
-				minetest.get_node_timer(pos):start(20+math.random(1, 3600))
-			end,pos)
-		else
-			i = minetest.find_node_near(pos, 1, {"group:water","group:liquid"})
-			if i then
-				minetest.get_node_timer(pos):start(120)
-			else
-				minetest.after(0, 
-				function(pos)
-					minetest.set_node(pos, {name="default:stone"})
-				end,pos)
-			end
-		end
-	end
-	minetest.register_node("lava_ore_gen:stone",clonenodeForWater)
-	
 	local clonenodeForLava = {}
 	for k,v in pairs(minetest.registered_nodes["default:stone"]) do clonenodeForLava[k] = v end
 	clonenodeForLava.groups = {cracky = 3, stone = 1, not_in_creative_inventory = 1}
@@ -124,18 +99,10 @@ if count > 0 then
 			end,pos)
 		else
 			i = minetest.find_node_near(pos, 1, {"group:water","group:liquid"})
-			if i then
-				minetest.after(0, 
-				function(pos)
-					minetest.set_node(pos, {name="lava_ore_gen:stone"})
-					minetest.get_node_timer(pos):start(120)
-				end,pos)
-			else
-				minetest.after(0, 
-				function(pos)
-					minetest.set_node(pos, {name="default:stone"})
-				end,pos)
-			end
+			minetest.after(0, 
+			function(pos)
+				minetest.set_node(pos, {name="default:stone"})
+			end,pos)
 		end
 	end
 	minetest.register_node("lava_ore_gen:stone_hot",clonenodeForLava)
@@ -152,12 +119,8 @@ if count > 0 then
 			minetest.set_node(pos, {name="lava_ore_gen:stone_hot"})
 			minetest.get_node_timer(pos):start(20+math.random(1, 3600))
 		end,pos)
-		elseif not (def and def.groups and def.groups.lava and def.groups.lava > 0) then
-		minetest.after(0, 
-			function(pos)
-			minetest.set_node(pos, {name="lava_ore_gen:stone"})
-			minetest.get_node_timer(pos):start(120)
-			end,pos)
+		else
+			return true
 		end
 		return false
 	end
