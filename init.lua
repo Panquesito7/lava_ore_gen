@@ -4,6 +4,8 @@ local ore_r_nodes = {}
 local count = 0
 local r_count = 0
 local blacklist = {}
+local interval = tonumber(minetest.settings:get("lava_ore_gen.interval")) or 20
+local chance = tonumber(minetest.settings:get("lava_ore_gen.chance")) or 3600
 
 function add_ore(name)
 	if minetest.registered_nodes[name] then
@@ -74,20 +76,23 @@ if count > 0 then
 	clonenodeForLava.light_source = 4
 
 	clonenodeForLava.on_timer = function(pos)
-		local i = minetest.find_node_near(pos, 1.5, {"group:lava"})
-		if i then
+		local node = minetest.find_node_near(pos, 1.5, {"group:lava"})
+		if node then
 			minetest.after(0, function(pos)
 				local _or = {}
 				local r = math.random(1, r_count)
 				local ore_test = ore_rarities[r]
 				local ore_common = 1
+
 				for i, v in next, ore_rarities do
 					r = math.random(1, r_count)
 					ore_test = ore_rarities[r]
 					_or[i] = ore_rarities[i] - math.floor(math.random((ore_test / (math.random(0, ore_test) * 5))))
 				end
+
 				r = math.random(1, r_count)
 				ore_test = _or[r]
+
 				for i, v in next, _or do
 					if ore_test > v then
 						ore_test = v
@@ -95,15 +100,16 @@ if count > 0 then
 						i = 1
 					end
 				end
+
 				local ore_name = ore_r_nodes[ore_common]
 				minetest.swap_node(pos, {name = ore_name})
 			end, pos)
 		else
-			i = minetest.find_node_near(pos, 1, {"group:water", "group:liquid"})
 			minetest.after(0, function(pos)
 				minetest.set_node(pos, {name = "default:stone"})
 			end, pos)
 		end
+		return true
 	end
 	
 	minetest.register_node("lava_ore_gen:stone_hot", clonenodeForLava)
@@ -117,7 +123,7 @@ if count > 0 then
 			if (def and def.groups and def.groups.lava and def.groups.lava > 0) then
 				minetest.after(0, function(pos)
 					minetest.set_node(pos, {name = "lava_ore_gen:stone_hot"})
-					minetest.get_node_timer(pos):start(20 + math.random(1, 3600))
+					minetest.get_node_timer(pos):start(interval + math.random(1, chance))
 				end, pos)
 			else
 				return true
