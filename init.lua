@@ -41,7 +41,7 @@ function get_rarities()
 		for i, v in next, ore_nodes do
 			for j, n in next, minetest.registered_ores do
 				if v == n.ore then
-					table.insert(ore_rarities, math.random(0, 5))
+					table.insert(ore_rarities, 1)
 					table.insert(ore_r_nodes, v)
 					r_count = r_count + 1
 				end
