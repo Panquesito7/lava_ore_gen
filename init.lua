@@ -6,6 +6,7 @@ local r_count = 0
 local blacklist = {}
 local interval = tonumber(minetest.settings:get("lava_ore_gen.interval")) or 20
 local chance = tonumber(minetest.settings:get("lava_ore_gen.chance")) or 3600
+local random = minetest.settings:get_bool("lava_ore_gen.random") or false
 
 function add_ore(name)
 	if minetest.registered_nodes[name] then
@@ -26,12 +27,24 @@ function add_ores()
 end
 
 function get_rarities()
-	for i, v in next, ore_nodes do
-		for j, n in next, minetest.registered_ores do
-			if v == n.ore then
-				table.insert(ore_rarities, math.floor(n.clust_scarcity / n.clust_size))
-				table.insert(ore_r_nodes, v)
-				r_count = r_count + 1
+	if not random then
+		for i, v in next, ore_nodes do
+			for j, n in next, minetest.registered_ores do
+				if v == n.ore then
+					table.insert(ore_rarities, math.floor(n.clust_scarcity / n.clust_size))
+					table.insert(ore_r_nodes, v)
+					r_count = r_count + 1
+				end
+			end
+		end
+	else
+		for i, v in next, ore_nodes do
+			for j, n in next, minetest.registered_ores do
+				if v == n.ore then
+					table.insert(ore_rarities, math.random(0, 5))
+					table.insert(ore_r_nodes, v)
+					r_count = r_count + 1
+				end
 			end
 		end
 	end

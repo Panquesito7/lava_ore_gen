@@ -4,3 +4,5 @@
 lava_ore_gen.interval (Interval) float 20
 # random chance of when to change stone to ore.
 lava_ore_gen.chance (Chance) float 3600
+# Make ores random instead of being based on how rare they are.
+lava_ore_gen.random (Random) bool false
