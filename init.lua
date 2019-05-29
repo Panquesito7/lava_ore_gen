@@ -27,24 +27,12 @@ function add_ores()
 end
 
 function get_rarities()
-	if not random then
-		for i, v in next, ore_nodes do
-			for j, n in next, minetest.registered_ores do
-				if v == n.ore then
-					table.insert(ore_rarities, math.floor(n.clust_scarcity / n.clust_size))
-					table.insert(ore_r_nodes, v)
-					r_count = r_count + 1
-				end
-			end
-		end
-	else
-		for i, v in next, ore_nodes do
-			for j, n in next, minetest.registered_ores do
-				if v == n.ore then
-					table.insert(ore_rarities, 1)
-					table.insert(ore_r_nodes, v)
-					r_count = r_count + 1
-				end
+	for i, v in next, ore_nodes do
+		for j, n in next, minetest.registered_ores do
+			if v == n.ore then
+				table.insert(ore_rarities, math.floor(n.clust_scarcity / n.clust_size))
+				table.insert(ore_r_nodes, v)
+				r_count = r_count + 1
 			end
 		end
 	end
@@ -92,30 +80,34 @@ if count > 0 then
 		local node = minetest.find_node_near(pos, 1.5, {"group:lava"})
 		if node then
 			minetest.after(0, function(pos)
-				local _or = {}
-				local r = math.random(1, r_count)
-				local ore_test = ore_rarities[r]
-				local ore_common = 1
+				if not random then
+					local _or = {}
+					local r = math.random(1, r_count)
+					local ore_test = ore_rarities[r]
+					local ore_common = 1
 
-				for i, v in next, ore_rarities do
-					r = math.random(1, r_count)
-					ore_test = ore_rarities[r]
-					_or[i] = ore_rarities[i] - math.floor(math.random((ore_test / (math.random(0, ore_test) * 5))))
-				end
-
-				r = math.random(1, r_count)
-				ore_test = _or[r]
-
-				for i, v in next, _or do
-					if ore_test > v then
-						ore_test = v
-						ore_common = i
-						i = 1
+					for i, v in next, ore_rarities do
+						r = math.random(1, r_count)
+						ore_test = ore_rarities[r]
+						_or[i] = ore_rarities[i] - math.floor(math.random((ore_test / (math.random(0, ore_test) * 5))))
 					end
-				end
 
-				local ore_name = ore_r_nodes[ore_common]
-				minetest.swap_node(pos, {name = ore_name})
+					r = math.random(1, r_count)
+					ore_test = _or[r]
+
+					for i, v in next, _or do
+						if ore_test > v then
+							ore_test = v
+							ore_common = i
+							i = 1
+						end
+					end
+
+					local ore_name = ore_r_nodes[ore_common]
+					minetest.set_node(pos, {name = ore_name})
+				else
+					minetest.set_node(pos, {name = ore_r_nodes[math.random(1, r_count)]})
+				end
 			end, pos)
 		else
 			minetest.after(0, function(pos)
