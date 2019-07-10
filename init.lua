@@ -24,9 +24,9 @@ local function create_hotstone()
 					end
 				end
 				-- Do math to pick a ore.
-				local ore = {rarity = 0, name = "default:stone"}
+				local ore = {rarity = -1, name = "default:stone"}
 				for i, v in next, ore_map do
-					if ore.rarity == 0 or ore.rarity > math.random(0, v.rarity) then
+					if ore.rarity == -1 or ore.rarity > math.random(0, v.rarity) then
 						ore = v
 					end
 				end
