@@ -1,3 +1,6 @@
+lava_ore_gen = {}
+lava_ore_gen.blacklist = {}
+
 local stone_name = minetest.settings:get("lava_ore_gen.stone_name") or "default:stone"
 local interval = tonumber(minetest.settings:get("lava_ore_gen.interval")) or 20
 local chance = tonumber(minetest.settings:get("lava_ore_gen.chance")) or 3600
@@ -23,9 +26,11 @@ local function override_hotstone()
 				local ore_map = {}
 				for i, v in next, minetest.registered_ores do
 					local name = v.ore
-					if string.match(name, ":stone_with_") or string.match(name, ":mineral_") then
-						local rarity = v.clust_scarcity - math.random(0, v.clust_scarcity + 1)
-						ore_map[i] = {rarity = rarity, name = name}
+					if not lava_ore_gen.blacklist[name] then
+						if string.match(name, ":stone_with_") or string.match(name, ":mineral_") then
+							local rarity = v.clust_scarcity - math.random(0, v.clust_scarcity + 1)
+							ore_map[i] = {rarity = rarity, name = name}
+						end
 					end
 				end
 				-- Do math to pick a ore.
@@ -39,7 +44,10 @@ local function override_hotstone()
 			else
 				local ore_map = {}
 				for i, v in next, minetest.registered_ores do
-					ore_map[#ore_map + 1] = v.ore
+					local name = v.ore
+					if not lava_ore_gen.blacklist[name] then
+						ore_map[#ore_map + 1] = name
+					end
 				end
 				minetest.set_node(pos, {name = ore_map[math.random(1, #ore_map + 1)]})
 			end
