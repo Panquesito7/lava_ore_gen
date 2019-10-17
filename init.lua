@@ -2,8 +2,8 @@ lava_ore_gen = {}
 lava_ore_gen.blacklist = {}
 
 local stone_name = minetest.settings:get("lava_ore_gen.stone_name") or "default:stone"
-local interval = tonumber(minetest.settings:get("lava_ore_gen.interval")) or 20
-local chance = tonumber(minetest.settings:get("lava_ore_gen.chance")) or 3600
+local interval = tonumber(minetest.settings:get("lava_ore_gen.interval")) or 3600
+local chance = tonumber(minetest.settings:get("lava_ore_gen.chance")) or 86400
 local random = minetest.settings:get_bool("lava_ore_gen.random") or false
 
 local function create_hotstone()

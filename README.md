@@ -22,13 +22,13 @@ lava_ore_gen.stone_name = "default:stone"
 
 fixed interval of when to change stone to ore.
 ``` lua
-lava_ore_gen.interval = 20
+lava_ore_gen.interval = 3600
 ```
 
 
 random chance of when to change stone to ore.
 ``` lua
-lava_ore_gen.chance = 3600
+lava_ore_gen.chance = 86400
 ```
 
 Make ores random instead of being based on how rare they are.
