@@ -1,5 +1,9 @@
 # Lava Ore Generation
 
+> **Note**
+> This mod was originally owned by Coder12 which is no longer available on GitHub.\
+> The mod might be outdated and not work in the latest MT versions. I'll be updating the mod soon.
+
 This mod makes the lava turn stone into ore over time.    
 When lava comes in contact with stone it turns red hot. After a specific time it turns into ore.
 
